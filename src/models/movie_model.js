@@ -6,6 +6,11 @@ const getMoviesModel = () => {
   return model(query);
 };
 
+const getMovieModel = (id) => {
+  const query = "SELECT * FROM " + table + " WHERE id = ?";
+  return model(query, id);
+};
+
 const createMovieModel = (data) => {
   const query = `
     INSERT INTO movies (name, release_date, price, author)
@@ -43,6 +48,7 @@ const editMovieModel = (id, data) => {
 
 module.exports = {
   getMoviesModel,
+  getMovieModel,
   createMovieModel,
   deleteMovieModel,
   editMovieModel,
