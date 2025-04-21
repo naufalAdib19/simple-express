@@ -25,4 +25,25 @@ const deleteMovieModel = (id) => {
   return model(query, id);
 };
 
-module.exports = { getMoviesModel, createMovieModel, deleteMovieModel };
+const editMovieModel = (id, data) => {
+  const query = `
+    UPDATE ${table}
+    SET name = ?, release_date = ?, price = ?, author = ?
+    WHERE id = ?
+  `;
+  const values = [
+    data?.name,
+    data?.release_date,
+    data?.price,
+    data?.author,
+    id,
+  ];
+  return model(query, values);
+};
+
+module.exports = {
+  getMoviesModel,
+  createMovieModel,
+  deleteMovieModel,
+  editMovieModel,
+};
