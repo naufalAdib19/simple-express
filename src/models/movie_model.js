@@ -17,4 +17,12 @@ const createMovieModel = (data) => {
   return model(query, values);
 };
 
-module.exports = { getMoviesModel, createMovieModel };
+const deleteMovieModel = (id) => {
+  const query = `
+    DELETE FROM ${table}
+    WHERE id = ?
+  `;
+  return model(query, id);
+};
+
+module.exports = { getMoviesModel, createMovieModel, deleteMovieModel };

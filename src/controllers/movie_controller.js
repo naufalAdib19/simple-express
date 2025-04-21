@@ -2,6 +2,7 @@ const response = require("../helpers/response");
 
 const { getMoviesModel } = require("../models/movie_model");
 const { createMovieModel } = require("../models/movie_model");
+const { deleteMovieModel } = require("../models/movie_model");
 
 const getMovies = async (_, res) => {
   try {
@@ -17,7 +18,6 @@ const getMovies = async (_, res) => {
 };
 
 const createMovie = async (req, res) => {
-  console.log(req.body);
   try {
     const result = await createMovieModel(req.body);
     return response(res, "Success", 200, true, result);
@@ -26,4 +26,13 @@ const createMovie = async (req, res) => {
   }
 };
 
-module.exports = { getMovies, createMovie };
+const deleteMovie = async (req, res) => {
+  try {
+    const result = await deleteMovieModel(req.params.id);
+    return response(res, "Success", 200, true, result);
+  } catch (err) {
+    return response(res, "Error", 500, false, err);
+  }
+};
+
+module.exports = { getMovies, createMovie, deleteMovie };
