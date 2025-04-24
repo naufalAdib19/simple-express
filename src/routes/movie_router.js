@@ -10,6 +10,8 @@ const { editMovie } = require("../controllers/movie_controller");
 const { registerUser } = require("../controllers/user_controller");
 const { loginUser } = require("../controllers/user_controller");
 
+const { addMovieToUser } = require("../controllers/user_movie_controller");
+
 const router = Router();
 
 // import middleware
@@ -24,5 +26,7 @@ router.get("/api/movie/:id", getMovie);
 
 router.post("/api/register", registerUser);
 router.post("/api/login", loginUser);
+
+router.post("/api/add-movie-to-user", auth, addMovieToUser);
 
 module.exports = router;

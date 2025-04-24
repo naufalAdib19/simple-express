@@ -1,6 +1,6 @@
 const db = require("./db");
 
-module.exports = (query, data = "") => {
+async function model(query, data = "") {
   return new Promise((resolve, reject) => {
     db.query(query, data, (err, result) => {
       if (err) {
@@ -10,4 +10,8 @@ module.exports = (query, data = "") => {
       }
     });
   });
+}
+
+module.exports = {
+  model,
 };

@@ -1,4 +1,4 @@
-const model = require("../helpers/model");
+const { model } = require("../helpers/model");
 const table = "movies";
 
 const getMoviesModel = () => {
@@ -7,7 +7,7 @@ const getMoviesModel = () => {
 };
 
 const getMovieModel = (id) => {
-  const query = "SELECT * FROM " + table + " WHERE id = ?";
+  const query = "SELECT * FROM " + table + " WHERE id = ? FOR UPDATE";
   return model(query, id);
 };
 
@@ -46,10 +46,21 @@ const editMovieModel = (id, data) => {
   return model(query, values);
 };
 
+const updateStockMovieModel = (id) => {
+  const query = `
+    UPDATE ${table}
+    SET stock = stock - 1
+    WHERE id = ?
+  `;
+  const values = [id];
+  return model(query, values);
+};
+
 module.exports = {
   getMoviesModel,
   getMovieModel,
   createMovieModel,
   deleteMovieModel,
   editMovieModel,
+  updateStockMovieModel,
 };

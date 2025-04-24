@@ -1,4 +1,4 @@
-const model = require("../helpers/model");
+const { model } = require("../helpers/model");
 const table = "users";
 
 const getUserModel = (username) => {
