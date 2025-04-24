@@ -8,16 +8,21 @@ const { deleteMovie } = require("../controllers/movie_controller");
 const { editMovie } = require("../controllers/movie_controller");
 
 const { registerUser } = require("../controllers/user_controller");
+const { loginUser } = require("../controllers/user_controller");
 
 const router = Router();
 
-// router
-router.get("/api/movie", getMovies);
+// import middleware
+const { auth } = require("../middlewares/auth");
+
+// routers
+router.get("/api/movie", auth, getMovies);
 router.post("/api/movie", createMovie);
 router.delete("/api/movie/:id", deleteMovie);
 router.put("/api/movie/:id", editMovie);
 router.get("/api/movie/:id", getMovie);
 
 router.post("/api/register", registerUser);
+router.post("/api/login", loginUser);
 
 module.exports = router;
