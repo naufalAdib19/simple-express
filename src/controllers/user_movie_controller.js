@@ -27,9 +27,6 @@ const addMovieToUser = async (req, res) => {
       return response(res, "Book out of stock", 400, false, null);
     }
 
-    // simulate race conditions
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     /* add book to user */
     const result = await connection.query(
       "INSERT INTO user_movie (username, movie_id) VALUES (?, ?)",
