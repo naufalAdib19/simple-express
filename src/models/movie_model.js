@@ -46,21 +46,10 @@ const editMovieModel = (id, data) => {
   return model(query, values);
 };
 
-const updateStockMovieModel = (id) => {
-  const query = `
-    UPDATE ${table}
-    SET stock = stock - 1
-    WHERE id = ?
-  `;
-  const values = [id];
-  return model(query, values);
-};
-
 module.exports = {
   getMoviesModel,
   getMovieModel,
   createMovieModel,
   deleteMovieModel,
   editMovieModel,
-  updateStockMovieModel,
 };
