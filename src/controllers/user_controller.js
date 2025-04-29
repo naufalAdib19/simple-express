@@ -1,9 +1,11 @@
 const response = require("../helpers/response");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const client = require("../helpers/redis_client");
+const { sendOTPQueue } = require("../helpers/bullmq");
 
 const { registerUserModel } = require("../models/user_model");
-const { getUserModel } = require("../models/user_model");
+const { getUserModel, linkUserToEmailModel } = require("../models/user_model");
 
 const registerUser = async (req, res) => {
   try {
@@ -54,4 +56,43 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const sendOTP = async (req) => {
+  const { email } = req.body;
+  const user = req.user.username;
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  const storedDateToRedis = {
+    email: email,
+    otp: otp,
+  };
+
+  // Set OTP in Redis
+  await client.setEx(`otp:${user}`, 180, JSON.stringify(storedDateToRedis));
+
+  // Add job to send-otp queue
+  sendOTPQueue.add("send-otp", { email: email, otp: otp });
+};
+
+const verifyOTP = async (req, res) => {
+  const { otp } = req.body;
+  const user = req.user.username;
+  const redisData = await client.get(`otp:${user}`);
+
+  const { email, otp: otpFromRedis } = JSON.parse(redisData);
+
+  try {
+    if (otp !== otpFromRedis) {
+      return response(res, "Invalid OTP", 400, false, null);
+    }
+    const result = await linkUserToEmailModel({
+      email: email,
+      username: user,
+    });
+    return response(res, "Success", 200, true, result);
+  } catch (err) {
+    console.log(err);
+    return response(res, "Error", 500, false, err);
+  }
+};
+
+module.exports = { registerUser, loginUser, sendOTP, verifyOTP };

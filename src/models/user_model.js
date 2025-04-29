@@ -15,7 +15,18 @@ const registerUserModel = (data) => {
   return model(query, values);
 };
 
+const linkUserToEmailModel = (data) => {
+  const query = `
+        UPDATE ${table}
+        SET email = ?
+        WHERE username = ?
+    `;
+  const values = [data?.email, data?.username];
+  return model(query, values);
+};
+
 module.exports = {
   registerUserModel,
   getUserModel,
+  linkUserToEmailModel,
 };
